@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PRECIKAM IT Inventory Management System - Professional Edition">
+    <title>PRECIKAM IT Inventory System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary-color: #3a52a3;
+            --secondary-color: #198fd9;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --dark-color: #1f2937;
+            --light-gray: #f9fafb;
+            --medium-gray: #e5e7eb;
+            --text-color: #374151;
+            --white: #ffffff;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container { 
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.03) 10px,
+                rgba(255, 255, 255, 0.03) 20px
+            );
+        }
+        
+        .header-content { 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .logo-container {
+            background: var(--white);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header-logo { 
+            max-width: 200px;
+            height: auto;
+            max-height: 100px;
+            display: block;
+        }
+        
+        .logo-fallback {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .header-text h1 { 
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-text p { 
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tabs { 
+            display: flex;
+            background: var(--white);
+            border-bottom: 2px solid var(--medium-gray);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tab { 
+            flex: 1;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            min-width: 140px;
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .tab-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .tab:hover { 
+            background: var(--light-gray);
+            color: var(--primary-color);
+        }
+        
+        .tab.active { 
+            background: var(--white);
+            color: var(--primary-color);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+        }
+        
+        .content { 
+            padding: 2rem;
+            min-height: 500px;
+        }
+        
+        .tab-content { 
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active { 
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn { 
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+        
+        .btn-icon {
+            font-size: 1rem;
+        }
+        
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active { transform: translateY(0); }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-primary { background: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background: #2e4189; }
+        .btn-success { background: var(--success-color); color: var(--white); }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: var(--danger-color); color: var(--white); }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: var(--warning-color); color: var(--white); }
+        .btn-warning:hover { background: #d97706; }
+        .btn-info { background: var(--info-color); color: var(--white); }
+        .btn-info:hover { background: #0891b2; }
+        .btn-secondary { background: #6b7280; color: var(--white); }
+        .btn-secondary:hover { background: #4b5563; }
+        
+        .stats-grid { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card { 
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 1.75rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card h3 { 
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        .stat-card .value { 
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .sub-text {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .stat-card.green { background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%); }
+        .stat-card.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .stat-card.orange { background: linear-gradient(135deg, var(--warning-color) 0%, #d97706 100%); }
+        
+        table { 
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-top: 1.25rem;
+        }
+        
+        th { 
+            background: var(--dark-color);
+            color: var(--white);
+            padding: 0.9rem 1rem;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        td { 
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+            font-size: 0.9rem;
+        }
+        
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: var(--light-gray); }
+        
+        .status-badge { 
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-returned { background: #fee2e2; color: #991b1b; }
+        
+        .filter-buttons { 
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn { 
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--medium-gray);
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .filter-btn:hover { 
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(58, 82, 163, 0.05);
+        }
+        
+        .filter-btn.active { 
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+        
+        .date-filter-section { 
+            background: var(--light-gray);
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 1.25rem;
+            border: 2px solid var(--medium-gray);
+        }
+        
+        .date-filter-section h3 { 
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .date-inputs { 
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        
+        .date-input-group { 
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .date-input-group label { 
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        
+        .date-input-group input { 
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+        
+        .date-input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 82, 163, 0.1);
+        }
+        
+        .modal { 
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            padding: 1rem;
+        }
+        
+        .modal.active { 
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-content { 
+            background: var(--white);
+            padding: 1.75rem;
+            border-radius: 14px;
+            max-width: 550px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--medium-gray);
+        }
+        
+        .modal-header h2 { 
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .close { 
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-color);
+            line-height: 1;
+            transition: color 0.2s ease;
+            padding: 0.25rem;
+        }
+        
+        .close:hover { color: var(--danger-color); }
+        
+        .form-group { 
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label { 
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select { 
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus { 
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(58, 82, 163, 0.1);
+        }
+        
+        .notification { 
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: var(--success-color);
+            color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            font-weight: 600;
+            max-width: 350px;
+        }
+        
+        .notification.show { 
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        
+        .notification.error { background: var(--danger-color); }
+        
+        @keyframes slideInRight { 
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .empty-state { 
+            text-align: center;
+            padding: 3.5rem 2rem;
+            color: var(--text-color);
+        }
+        
+        .empty-state .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.3;
+        }
+        
+        .empty-state h3 { 
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-color);
+        }
+        
+        .empty-state p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        .page-header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .page-header h2 { 
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .toolbar { 
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 1.75rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-section h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .welcome-section p {
+            color: var(--text-color);
+            line-height: 1.7;
+            margin-bottom: 0.9rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            padding: 1.1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-card .icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.4rem;
+        }
+        
+        .feature-card strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        
+        .feature-card p {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.2rem;
+            line-height: 1.4;
+        }
+        
+        .footer { 
+            background: linear-gradient(135deg, var(--dark-color) 0%, #111827 100%);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+        
+        .footer-content { max-width: 700px; margin: 0 auto; }
+        .footer h3 { font-size: 1.3rem; margin-bottom: 0.6rem; }
+        .footer p { opacity: 0.85; line-height: 1.6; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        
+        .footer .developer { 
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+        }
+        
+        .footer .developer strong { color: var(--secondary-color); }
+        
+        .summary-footer {
+            margin-top: 1.25rem;
+            padding: 0.9rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        
+        .print-header { display: none; }
+        
+        @media print {
+            body { 
+                background: var(--white); 
+                padding: 0; 
+                margin: 0;
+            }
+            .container { 
+                box-shadow: none; 
+                max-width: 100%;
+            }
+            .header, .tabs, .toolbar, .filter-buttons, .date-filter-section, .footer, .page-header .toolbar { 
+                display: none !important; 
+            }
+            .content { 
+                padding: 0;
+                margin: 0;
+            }
+            
+            .print-header { 
+                display: flex !important; 
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 1.5rem; 
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #e5e7eb;
+                page-break-after: avoid;
+            }
+            
+            .print-header-left {
+                flex: 0 0 auto;
+                margin-right: 2rem;
+            }
+            
+            .print-header-center {
+                flex: 1;
+                text-align: center;
+                padding: 0 1rem;
+            }
+            
+            .print-header-right {
+                flex: 0 0 auto;
+                text-align: right;
+                min-width: 150px;
+            }
+            
+            .print-logo {
+                max-width: 150px;
+                height: auto;
+                display: block;
+            }
+            
+            .print-title {
+                color: #3a52a3;
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin: 0.5rem 0;
+            }
+            
+            .print-subtitle {
+                color: #6b7280;
+                font-size: 0.9rem;
+                margin: 0.25rem 0;
+            }
+            
+            .print-date {
+                color: #6b7280;
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+            
+            .print-footer-text {
+                color: #9ca3af;
+                font-size: 0.75rem;
+                text-align: center;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 0.5rem;
+                background: white;
+                border-top: 1px solid #e5e7eb;
+            }
+            
+            table { 
+                box-shadow: none !important; 
+                page-break-inside: auto; 
+                font-size: 0.75rem;
+                margin-top: 0.5rem;
+                border: 1px solid #e5e7eb;
+            }
+            
+            th { 
+                background: var(--dark-color) !important; 
+                color: var(--white) !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+            
+            td {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.7rem;
+            }
+            
+            tr { 
+                page-break-inside: avoid; 
+                page-break-after: auto; 
+            }
+            
+            thead { 
+                display: table-header-group; 
+            }
+            
+            .status-badge { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            
+            .no-print, td.no-print, th.no-print { 
+                display: none !important; 
+            }
+            
+            .summary-footer { 
+                display: none !important; 
+            }
+            
+            .page-header {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 1.25rem; }
+            .header-content { flex-direction: column; text-align: center; }
+            .logo-section { flex-direction: column; }
+            .logo-container { padding: 0.6rem 1rem; }
+            .header-logo { max-width: 160px; }
+            .header-text h1 { font-size: 1.6rem; }
+            .content { padding: 1.25rem; }
+            .tabs { flex-direction: column; }
+            .tab { min-width: 100%; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .toolbar { width: 100%; }
+            .date-inputs { flex-direction: column; }
+            .date-input-group { width: 100%; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .notification { right: 1rem; left: 1rem; max-width: none; }
+            .modal-content { padding: 1.25rem; }
+            table { font-size: 0.85rem; }
+            th, td { padding: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="notification" class="notification"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-container">
+                        <img 
+                            src="https://precikam.com/wp-content/uploads/2023/04/Precikam-Logo.png" 
+                            alt="PRECIKAM Logo" 
+                            class="header-logo"
+                            id="header-logo"
+                            onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
+                        <div class="logo-fallback" style="display: none;">
+                            PRECIKAM<br><small style="font-size: 0.6em;">Precimold Kamek</small>
+                        </div>
+                    </div>
+                    <div class="header-text">
+                        <h1>PRECIKAM Inventory</h1>
+                        <p>IT Asset Management System</p>
+                        <span class="version-badge">v2.0 Professional</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('dashboard')" aria-label="Dashboard">
+                <span class="tab-icon">📊</span>Dashboard
+            </button>
+            <button class="tab" onclick="showTab('computers')" aria-label="Computers">
+                <span class="tab-icon">💻</span>Computers
+            </button>
+            <button class="tab" onclick="showTab('phones')" aria-label="Phones">
+                <span class="tab-icon">📱</span>Phones
+            </button>
+            <button class="tab" onclick="showTab('licenses')" aria-label="Licenses">
+                <span class="tab-icon">🔑</span>Licenses
+            </button>
+            <button class="tab" onclick="showTab('employees')" aria-label="Employees">
+                <span class="tab-icon">👥</span>Employees
+            </button>
+        </div>
+        
+        <div class="content">
+            <div id="dashboard" class="tab-content active">
+                <h2 style="margin-bottom: 1.25rem; font-size: 1.75rem; color: var(--primary-color); font-weight: 700;">Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Computers</h3>
+                        <div class="value" id="stat-computers">0</div>
+                        <div class="sub-text">
+                            <span id="stat-computers-active">0</span> Active | <span id="stat-computers-returned">0</span> Returned
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <h3>Phones</h3>
+                        <div class="value" id="stat-phones">0</div>
+                        <div class="sub-text">
+                            <span id="stat-phones-active">0</span> Active | <span id="stat-phones-returned">0</span> Returned
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <h3>Licenses</h3>
+                        <div class="value" id="stat-licenses">0</div>
+                        <div class="sub-text">Active subscriptions</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <h3>Employees</h3>
+                        <div class="value" id="stat-employees">0</div>
+                        <div class="sub-text">Total staff members</div>
+                    </div>
+                </div>
+                
+                <div class="welcome-section">
+                    <h3>Welcome to PRECIKAM Inventory System</h3>
+                    <p>
+                        Professional IT asset management solution for Precimold Kamek. 
+                        Track computers, phones, licenses, and employees in one centralized platform.
+                    </p>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="icon">✔</div>
+                            <strong>Offline Ready</strong>
+                            <p>Works without internet</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">💾</div>
+                            <strong>Auto-Save</strong>
+                            <p>Never lose your data</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">📊</div>
+                            <strong>Export Data</strong>
+                            <p>CSV export available</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="icon">🖨️</div>
+                            <strong>Print Reports</strong>
+                            <p>Professional formatting</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="computers" class="tab-content">
+                <div class="page-header">
+                    <h2>Computer Inventory</h2>
+                    <div class="toolbar">
+                        <button class="btn btn-warning" onclick="printSection('computers')">
+                            <span class="btn-icon">🖨️</span>Print
+                        </button>
+                        <button class="btn btn-success" onclick="exportCSV('computers')">
+                            <span class="btn-icon">📥</span>Export
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddModal('computer')">
+                            <span class="btn-icon">➕</span>Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="date-filter-section">
+                    <h3>📅 Filter by Date Range</h3>
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label>From Date</label>
+                            <input type="date" id="computers-date-from" onchange="applyDateFilter('computers')">
+                        </div>
+                        <div class="date-input-group">
+                            <label>To Date</label>
+                            <input type="date" id="computers-date-to" onchange="applyDateFilter('computers')">
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearDateFilter('computers')">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterItems('computers', 'all')">All</button>
+                    <button class="filter-btn" onclick="filterItems('computers', 'active')">✔ Active</button>
+                    <button class="filter-btn" onclick="filterItems('computers', 'returned')">↩ Returned</button>
+                </div>
+                <div id="computers-list"></div>
+            </div>
+            
+            <div id="phones" class="tab-content">
+                <div class="page-header">
+                    <h2>Phone Inventory</h2>
+                    <div class="toolbar">
+                        <button class="btn btn-warning" onclick="printSection('phones')">
+                            <span class="btn-icon">🖨️</span>Print
+                        </button>
+                        <button class="btn btn-success" onclick="exportCSV('phones')">
+                            <span class="btn-icon">📥</span>Export
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddModal('phone')">
+                            <span class="btn-icon">➕</span>Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="date-filter-section">
+                    <h3>📅 Filter by Date Range</h3>
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label>From Date</label>
+                            <input type="date" id="phones-date-from" onchange="applyDateFilter('phones')">
+                        </div>
+                        <div class="date-input-group">
+                            <label>To Date</label>
+                            <input type="date" id="phones-date-to" onchange="applyDateFilter('phones')">
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearDateFilter('phones')">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterItems('phones', 'all')">All</button>
+                    <button class="filter-btn" onclick="filterItems('phones', 'active')">✔ Active</button>
+                    <button class="filter-btn" onclick="filterItems('phones', 'returned')">↩ Returned</button>
+                </div>
+                <div id="phones-list"></div>
+            </div>
+            
+            <div id="licenses" class="tab-content">
+                <div class="page-header">
+                    <h2>O365 License Management</h2>
+                    <div class="toolbar">
+                        <button class="btn btn-warning" onclick="printSection('licenses')">
+                            <span class="btn-icon">🖨️</span>Print
+                        </button>
+                        <button class="btn btn-success" onclick="exportCSV('licenses')">
+                            <span class="btn-icon">📥</span>Export
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddModal('license')">
+                            <span class="btn-icon">➕</span>Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="date-filter-section">
+                    <h3>📅 Filter by Date Range</h3>
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label>From Date</label>
+                            <input type="date" id="licenses-date-from" onchange="applyDateFilter('licenses')">
+                        </div>
+                        <div class="date-input-group">
+                            <label>To Date</label>
+                            <input type="date" id="licenses-date-to" onchange="applyDateFilter('licenses')">
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearDateFilter('licenses')">Clear</button>
+                    </div>
+                </div>
+                
+                <div id="licenses-list"></div>
+            </div>
+            
+            <div id="employees" class="tab-content">
+                <div class="page-header">
+                    <h2>Employee Directory</h2>
+                    <div class="toolbar">
+                        <button class="btn btn-warning" onclick="printSection('employees')">
+                            <span class="btn-icon">🖨️</span>Print
+                        </button>
+                        <button class="btn btn-success" onclick="exportCSV('employees')">
+                            <span class="btn-icon">📥</span>Export
+                        </button>
+                        <button class="btn btn-primary" onclick="openAddModal('employee')">
+                            <span class="btn-icon">➕</span>Add
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="date-filter-section">
+                    <h3>📅 Filter by Date Range</h3>
+                    <div class="date-inputs">
+                        <div class="date-input-group">
+                            <label>From Date</label>
+                            <input type="date" id="employees-date-from" onchange="applyDateFilter('employees')">
+                        </div>
+                        <div class="date-input-group">
+                            <label>To Date</label>
+                            <input type="date" id="employees-date-to" onchange="applyDateFilter('employees')">
+                        </div>
+                        <button class="btn btn-secondary" onclick="clearDateFilter('employees')">Clear</button>
+                    </div>
+                </div>
+                
+                <div id="employees-list"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-content">
+                <h3>🏭 PRECIKAM IT Inventory</h3>
+                <p>Professional IT Asset Management for Precimold Kamek</p>
+                <p style="font-size: 0.8rem; margin-top: 1.25rem;">© 2025 All Rights Reserved</p>
+                <div class="developer">
+                    <p>Developed by <strong>Alliance Nsababakunzi</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Item</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modal-form"></div>
+        </div>
+    </div>
+
+    <script>
+        // Safe data initialization with error handling
+        function initializeData() {
+            try {
+                return {
+                    computers: JSON.parse(localStorage.getItem('precikam_computers') || '[]'),
+                    phones: JSON.parse(localStorage.getItem('precikam_phones') || '[]'),
+                    licenses: JSON.parse(localStorage.getItem('precikam_licenses') || '[]'),
+                    employees: JSON.parse(localStorage.getItem('precikam_employees') || '[]')
+                };
+            } catch (e) {
+                console.error('Error loading data:', e);
+                showNotification('⚠️ Error loading data. Starting fresh.', true);
+                return {
+                    computers: [],
+                    phones: [],
+                    licenses: [],
+                    employees: []
+                };
+            }
+        }
+
+        var data = initializeData();
+        var filters = { computers: 'all', phones: 'all' };
+        var dateFilters = {
+            computers: { from: null, to: null },
+            phones: { from: null, to: null },
+            licenses: { from: null, to: null },
+            employees: { from: null, to: null }
+        };
+
+        function migrateData() {
+            ['computers', 'phones'].forEach(function(type) {
+                data[type] = data[type].map(function(item) {
+                    if (!item.status) item.status = 'active';
+                    if (!item.dateAdded) item.dateAdded = new Date().toISOString().split('T')[0];
+                    return item;
+                });
+            });
+            
+            ['licenses', 'employees'].forEach(function(type) {
+                data[type] = data[type].map(function(item) {
+                    if (!item.dateAdded) item.dateAdded = new Date().toISOString().split('T')[0];
+                    return item;
+                });
+            });
+        }
+        migrateData();
+
+        function saveData(type) {
+            try {
+                localStorage.setItem('precikam_' + type, JSON.stringify(data[type]));
+                updateStats();
+                renderList(type);
+                showNotification('✔ Saved successfully');
+            } catch (e) {
+                console.error('Save error:', e);
+                showNotification('⚠️ Save failed. Storage may be full.', true);
+            }
+        }
+
+        function showNotification(message, isError) {
+            var notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = 'notification show' + (isError ? ' error' : '');
+            setTimeout(function() { notif.classList.remove('show'); }, 3000);
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            
+            var tabs = document.querySelectorAll('.tab');
+            for (var i = 0; i < tabs.length; i++) {
+                var tabText = tabs[i].textContent.toLowerCase();
+                if (tabText.indexOf(tabName) !== -1 || 
+                    (tabName === 'dashboard' && tabText.indexOf('dashboard') !== -1)) {
+                    tabs[i].classList.add('active');
+                    break;
+                }
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            if (tabName !== 'dashboard') renderList(tabName);
+        }
+
+        function updateStats() {
+            document.getElementById('stat-computers').textContent = data.computers.length;
+            document.getElementById('stat-phones').textContent = data.phones.length;
+            document.getElementById('stat-licenses').textContent = data.licenses.length;
+            document.getElementById('stat-employees').textContent = data.employees.length;
+            
+            var computersActive = data.computers.filter(function(c) { return c.status === 'active'; }).length;
+            var computersReturned = data.computers.filter(function(c) { return c.status === 'returned'; }).length;
+            document.getElementById('stat-computers-active').textContent = computersActive;
+            document.getElementById('stat-computers-returned').textContent = computersReturned;
+            
+            var phonesActive = data.phones.filter(function(p) { return p.status === 'active'; }).length;
+            var phonesReturned = data.phones.filter(function(p) { return p.status === 'returned'; }).length;
+            document.getElementById('stat-phones-active').textContent = phonesActive;
+            document.getElementById('stat-phones-returned').textContent = phonesReturned;
+        }
+
+        function filterItems(type, filter) {
+            filters[type] = filter;
+            var parent = document.getElementById(type).querySelector('.filter-buttons');
+            var buttons = parent.querySelectorAll('.filter-btn');
+            buttons.forEach(function(btn) { btn.classList.remove('active'); });
+            if (filter === 'all') buttons[0].classList.add('active');
+            else if (filter === 'active') buttons[1].classList.add('active');
+            else if (filter === 'returned') buttons[2].classList.add('active');
+            renderList(type);
+        }
+        
+        function applyDateFilter(type) {
+            dateFilters[type].from = document.getElementById(type + '-date-from').value || null;
+            dateFilters[type].to = document.getElementById(type + '-date-to').value || null;
+            renderList(type);
+        }
+        
+        function clearDateFilter(type) {
+            document.getElementById(type + '-date-from').value = '';
+            document.getElementById(type + '-date-to').value = '';
+            dateFilters[type] = { from: null, to: null };
+            renderList(type);
+        }
+        
+        function isWithinDateRange(dateStr, fromDate, toDate) {
+            if (!dateStr || (!fromDate && !toDate)) return true;
+            var itemDate = new Date(dateStr);
+            if (fromDate && itemDate < new Date(fromDate)) return false;
+            if (toDate && itemDate > new Date(toDate)) return false;
+            return true;
+        }
+
+        function toggleStatus(type, index) {
+            var item = data[type][index];
+            item.status = item.status === 'active' ? 'returned' : 'active';
+            item.dateReturned = item.status === 'returned' ? new Date().toISOString().split('T')[0] : null;
+            saveData(type);
+        }
+
+        function renderList(type) {
+            var container = document.getElementById(type + '-list');
+            var items = data[type].filter(function(item) {
+                if (type === 'computers' || type === 'phones') {
+                    var currentFilter = filters[type];
+                    if (currentFilter === 'active' && item.status !== 'active') return false;
+                    if (currentFilter === 'returned' && item.status !== 'returned') return false;
+                }
+                return isWithinDateRange(item.dateAdded, dateFilters[type].from, dateFilters[type].to);
+            });
+            
+            if (items.length === 0) {
+                var message = 'No items found';
+                if (type === 'computers' || type === 'phones') {
+                    if (filters[type] === 'active') message = 'No active items';
+                    else if (filters[type] === 'returned') message = 'No returned items';
+                }
+                if (dateFilters[type].from || dateFilters[type].to) message += ' in selected date range';
+                container.innerHTML = '<div class="empty-state"><div class="icon">📦</div><h3>' + message + '</h3><p>Try adjusting filters or add items</p></div>';
+                return;
+            }
+
+            var html = '<table><thead><tr>';
+            if (type === 'computers' || type === 'phones') {
+                html += '<th>Status</th><th>Model</th><th>Serial</th><th>User</th><th>Department</th><th>Added</th><th>Returned</th><th class="no-print">Actions</th>';
+            } else if (type === 'licenses') {
+                html += '<th>Name</th><th>Email</th><th>Type</th><th>Cost/Mo</th><th>Added</th><th class="no-print">Actions</th>';
+            } else {
+                html += '<th>Name</th><th>Email</th><th>Department</th><th>Position</th><th>Added</th><th class="no-print">Actions</th>';
+            }
+            html += '</tr></thead><tbody>';
+            
+            for (var i = 0; i < data[type].length; i++) {
+                var item = data[type][i];
+                if (type === 'computers' || type === 'phones') {
+                    if (filters[type] === 'active' && item.status !== 'active') continue;
+                    if (filters[type] === 'returned' && item.status !== 'returned') continue;
+                }
+                if (!isWithinDateRange(item.dateAdded, dateFilters[type].from, dateFilters[type].to)) continue;
+                
+                html += '<tr>';
+                if (type === 'computers' || type === 'phones') {
+                    html += '<td><span class="status-badge status-' + item.status + '">' + (item.status === 'active' ? '✔' : '↩') + '</span></td>';
+                    html += '<td><strong>' + escapeHtml(item.model) + '</strong></td><td>' + escapeHtml(item.serial) + '</td><td>' + escapeHtml(item.user) + '</td><td>' + escapeHtml(item.dept) + '</td>';
+                    html += '<td>' + (item.dateAdded || '-') + '</td><td>' + (item.dateReturned || '-') + '</td>';
+                    html += '<td class="no-print"><button class="btn btn-info" style="padding: 0.5rem 0.8rem; margin: 0.2rem;" onclick="toggleStatus(\'' + type + '\', ' + i + ')">' + (item.status === 'active' ? '↩' : '✔') + '</button>';
+                    html += '<button class="btn btn-danger" style="padding: 0.5rem 0.8rem; margin: 0.2rem;" onclick="deleteItem(\'' + type + '\', ' + i + ')">🗑</button></td>';
+                } else if (type === 'licenses') {
+                    html += '<td><strong>' + escapeHtml(item.name) + '</strong></td><td>' + escapeHtml(item.email) + '</td><td>' + escapeHtml(item.type) + '</td><td><strong>$' + escapeHtml(item.cost || '0') + '</strong></td>';
+                    html += '<td>' + (item.dateAdded || '-') + '</td><td class="no-print"><button class="btn btn-danger" style="padding: 0.5rem 0.8rem;" onclick="deleteItem(\'' + type + '\', ' + i + ')">🗑</button></td>';
+                } else {
+                    html += '<td><strong>' + escapeHtml(item.name) + '</strong></td><td>' + escapeHtml(item.email) + '</td><td>' + escapeHtml(item.dept) + '</td><td>' + escapeHtml(item.position || '-') + '</td>';
+                    html += '<td>' + (item.dateAdded || '-') + '</td><td class="no-print"><button class="btn btn-danger" style="padding: 0.5rem 0.8rem;" onclick="deleteItem(\'' + type + '\', ' + i + ')">🗑</button></td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            html += '<div class="summary-footer"><strong>Summary:</strong> Showing ' + items.length + ' of ' + data[type].length + ' total items</div>';
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getEmployeeOptions() {
+            if (data.employees.length === 0) return '<option value="">Add employees first</option>';
+            var options = '<option value="">Select employee...</option>';
+            for (var i = 0; i < data.employees.length; i++) {
+                var emp = data.employees[i];
+                options += '<option value="' + escapeHtml(emp.name) + '" data-dept="' + escapeHtml(emp.dept) + '">' + escapeHtml(emp.name) + ' - ' + escapeHtml(emp.dept) + '</option>';
+            }
+            return options;
+        }
+
+        function onEmployeeSelect() {
+            var select = document.getElementById('user');
+            var dept = select.options[select.selectedIndex].getAttribute('data-dept');
+            if (dept) document.getElementById('dept').value = dept;
+        }
+
+        function openAddModal(type) {
+            document.getElementById('modal-title').textContent = 'Add ' + type.charAt(0).toUpperCase() + type.slice(1);
+            var formHtml = '';
+            
+            if (type === 'computer' || type === 'phone') {
+                var modelPlaceholder = type === 'computer' ? 'e.g., Dell XPS 15' : 'e.g., iPhone 15 Pro Max';
+                var serialPlaceholder = type === 'computer' ? 'e.g., SN123456' : 'e.g., F2LZK1234567';
+                formHtml = '<div class="form-group"><label>Model *</label><input type="text" id="model" required placeholder="' + modelPlaceholder + '"></div>' +
+                    '<div class="form-group"><label>Serial Number *</label><input type="text" id="serial" required placeholder="' + serialPlaceholder + '"></div>' +
+                    '<div class="form-group"><label>Employee *</label><select id="user" onchange="onEmployeeSelect()" required>' + getEmployeeOptions() + '</select></div>' +
+                    '<div class="form-group"><label>Department *</label><input type="text" id="dept" required readonly style="background: #f9fafb;"></div>' +
+                    '<button class="btn btn-primary" style="width: 100%;" onclick="saveItem(\'' + type + '\')">Save ' + type.charAt(0).toUpperCase() + type.slice(1) + '</button>';
+            } else if (type === 'license') {
+                formHtml = '<div class="form-group"><label>Employee *</label><select id="employee-select" onchange="onLicenseEmployeeSelect()" required>' + getEmployeeOptions() + '</select></div>' +
+                    '<div class="form-group"><label>Name *</label><input type="text" id="name" required readonly style="background: #f9fafb;"></div>' +
+                    '<div class="form-group"><label>Email *</label><input type="email" id="email" required readonly style="background: #f9fafb;"></div>' +
+                    '<div class="form-group"><label>License Type *</label><select id="type"><option>Microsoft 365 Business Basic</option><option>Microsoft 365 Business Standard</option><option>Microsoft 365 Business Premium</option></select></div>' +
+                    '<div class="form-group"><label>Cost/Month ($)</label><input type="number" id="cost" placeholder="0.00" step="0.01"></div>' +
+                    '<button class="btn btn-primary" style="width: 100%;" onclick="saveItem(\'license\')">Save License</button>';
+            } else {
+                formHtml = '<div class="form-group"><label>Name *</label><input type="text" id="name" required placeholder="John Doe"></div>' +
+                    '<div class="form-group"><label>Email *</label><input type="email" id="email" required placeholder="user@precikam.com"></div>' +
+                    '<div class="form-group"><label>Department *</label><input type="text" id="dept" required placeholder="IT"></div>' +
+                    '<div class="form-group"><label>Position</label><input type="text" id="position" placeholder="Manager"></div>' +
+                    '<button class="btn btn-primary" style="width: 100%;" onclick="saveItem(\'employee\')">Save Employee</button>';
+            }
+            
+            document.getElementById('modal-form').innerHTML = formHtml;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function onLicenseEmployeeSelect() {
+            var select = document.getElementById('employee-select');
+            var idx = select.selectedIndex;
+            if (idx > 0) {
+                var emp = data.employees[idx - 1];
+                document.getElementById('name').value = emp.name;
+                document.getElementById('email').value = emp.email;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function saveItem(type) {
+            var item = {};
+            var currentDate = new Date().toISOString().split('T')[0];
+            
+            if (type === 'computer' || type === 'phone') {
+                item.model = document.getElementById('model').value.trim();
+                item.serial = document.getElementById('serial').value.trim();
+                item.user = document.getElementById('user').value.trim();
+                item.dept = document.getElementById('dept').value.trim();
+                item.status = 'active';
+                item.dateAdded = currentDate;
+                item.dateReturned = null;
+                
+                if (!item.model || !item.serial || !item.user || !item.dept) {
+                    showNotification('⚠️ Fill all fields', true);
+                    return;
+                }
+                
+                var dup = data[type + 's'].find(function(x) { return x.serial.toLowerCase() === item.serial.toLowerCase(); });
+                if (dup) {
+                    showNotification('⚠️ Serial exists', true);
+                    return;
+                }
+            } else if (type === 'license') {
+                item.name = document.getElementById('name').value.trim();
+                item.email = document.getElementById('email').value.trim().toLowerCase();
+                item.type = document.getElementById('type').value;
+                item.cost = document.getElementById('cost').value || '0';
+                item.dateAdded = currentDate;
+                
+                if (!item.name || !item.email || !item.type) {
+                    showNotification('⚠️ Fill all fields', true);
+                    return;
+                }
+            } else {
+                item.name = document.getElementById('name').value.trim();
+                item.email = document.getElementById('email').value.trim().toLowerCase();
+                item.dept = document.getElementById('dept').value.trim();
+                item.position = document.getElementById('position').value.trim();
+                item.dateAdded = currentDate;
+                
+                if (!item.name || !item.email || !item.dept) {
+                    showNotification('⚠️ Fill all fields', true);
+                    return;
+                }
+                
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(item.email)) {
+                    showNotification('⚠️ Invalid email', true);
+                    return;
+                }
+                
+                var dupEmail = data.employees.find(function(e) { return e.email === item.email; });
+                if (dupEmail) {
+                    showNotification('⚠️ Email exists', true);
+                    return;
+                }
+            }
+            
+            data[type + 's'].push(item);
+            saveData(type + 's');
+            closeModal();
+        }
+
+        function deleteItem(type, index) {
+            if (confirm('⚠️ Delete this item? This cannot be undone.')) {
+                data[type].splice(index, 1);
+                saveData(type);
+            }
+        }
+
+        function exportCSV(type) {
+            var items = data[type].filter(function(item) {
+                if (type === 'computers' || type === 'phones') {
+                    if (filters[type] === 'active' && item.status !== 'active') return false;
+                    if (filters[type] === 'returned' && item.status !== 'returned') return false;
+                }
+                return isWithinDateRange(item.dateAdded, dateFilters[type].from, dateFilters[type].to);
+            });
+            
+            if (items.length === 0) {
+                showNotification('⚠️ No data to export', true);
+                return;
+            }
+            
+            try {
+                var headers = Object.keys(items[0]).join(',');
+                var rows = items.map(function(item) {
+                    return Object.values(item).map(function(v) {
+                        return '"' + String(v || '').replace(/"/g, '""') + '"';
+                    }).join(',');
+                });
+                
+                var csv = '\ufeff' + headers + '\n' + rows.join('\n');
+                var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'PRECIKAM_' + type.toUpperCase() + '_' + new Date().toISOString().split('T')[0] + '.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('✔ Exported ' + items.length + ' items');
+            } catch (e) {
+                showNotification('⚠️ Export failed', true);
+            }
+        }
+
+        function printSection(type) {
+            var printHeader = '<div class="print-header">';
+            printHeader += '<div class="print-header-left">';
+            printHeader += '<img src="https://precikam.com/wp-content/uploads/2023/04/Precikam-Logo.png" alt="PRECIKAM" class="print-logo">';
+            printHeader += '</div>';
+            printHeader += '<div class="print-header-center">';
+            printHeader += '<h2 class="print-title">PRECIKAM - ' + type.charAt(0).toUpperCase() + type.slice(1) + ' Report</h2>';
+            
+            var df = dateFilters[type];
+            if (df.from || df.to) {
+                printHeader += '<div class="print-subtitle"><strong>Date Range:</strong> ';
+                printHeader += df.from && df.to ? df.from + ' to ' + df.to : df.from ? 'From ' + df.from : 'Until ' + df.to;
+                printHeader += '</div>';
+            }
+            
+            printHeader += '<div class="print-subtitle"><strong>Total Items:</strong> ' + data[type].length + '</div>';
+            printHeader += '</div>';
+            printHeader += '<div class="print-header-right">';
+            printHeader += '<div class="print-date"><strong>Generated:</strong><br>' + new Date().toLocaleDateString() + '<br>' + new Date().toLocaleTimeString() + '</div>';
+            printHeader += '</div>';
+            printHeader += '</div>';
+            
+            var printFooter = '<div class="print-footer-text">Developed by Alliance Nsababakunzi | © ' + new Date().getFullYear() + ' PRECIKAM</div>';
+            
+            var container = document.getElementById(type + '-list');
+            var originalContent = container.innerHTML;
+            container.innerHTML = printHeader + originalContent + printFooter;
+            
+            setTimeout(function() {
+                window.print();
+                setTimeout(function() { container.innerHTML = originalContent; }, 100);
+            }, 150);
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('modal').classList.contains('active')) closeModal();
+        });
+        
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        updateStats();
+        console.log('%c╔═══════════════════════════════════════╗', 'color: #3a52a3');
+        console.log('%c  PRECIKAM INVENTORY v2.0 LOADED ✔', 'color: #10b981; font-weight: bold');
+        console.log('%c╚═══════════════════════════════════════╝', 'color: #3a52a3');
+        console.log('Computers: ' + data.computers.length + ' | Phones: ' + data.phones.length + ' | Licenses: ' + data.licenses.length + ' | Employees: ' + data.employees.length);
+    </script>
+</body>
+</html>
